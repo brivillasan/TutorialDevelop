@@ -1,11 +1,18 @@
 package com.techacademy.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +42,11 @@ class UserControllerTest {
                 .apply(springSecurity()).build();
     }
 
+
+
+
+
+
     @Test
     @DisplayName("User更新画面")
     @WithMockUser
@@ -52,5 +64,25 @@ class UserControllerTest {
         User user = (User)result.getModelAndView().getModel().get("user");
         assertEquals(user.getId(), 1);
         assertEquals(user.getName(), "キラメキ太郎");
+
+    }
+
+    void test_getList() throws Exception {
+     // HTTPリクエストに対するレスポンスの検証
+        MvcResult result = mockMvc.perform(get("/user/list")) // URLにアクセス
+            .andExpect(status().isOk()) // ステータスを確認
+            .andExpect(model().attributeExists("user/list")) // Modelの内容を確認
+            .andExpect(model().hasNoErrors()) // Modelのエラー有無の確認
+            .andExpect(view().name("user/list")) // viewの確認
+            .andReturn(); // 内容の取得
+
+        // userの検証
+        User user = (User)result.getModelAndView().getModel().get("user");
+        assertEquals(user.getId(), 1);
+        assertEquals(user.getName(), "キラメキ太郎");
+        assertEquals(user.getId(), 2);
+        assertEquals(user.getName(), "キラメキ次郎");
+        assertEquals(user.getId(), 3);
+        assertEquals(user.getName(), "キラメキ花子");
     }
 }

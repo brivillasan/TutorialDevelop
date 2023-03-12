@@ -63,7 +63,7 @@ public class User {
     @OneToOne(mappedBy="user")
     private Authentication authentication;
 
-    /** レコードが削除される前に行う処理 */
+    /** レコードが削除される前に行なう処理 */
     @PreRemove
     @Transactional
     private void preRemove() {
